@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "DataFactory-GSK"
+		},
+		"AzureSqlDatabase_Goutham_connectionString": {
+			"value": ""
+		},
+		"BlobStorage_azurestorage_Auto_connectionString": {
+			"value": ""
+		},
+		"BlobStorage_azurestorage_Goutham_connectionString": {
+			"value": ""
+		},
+		"AzureKeyVault_SQLDB_Test_properties_typeProperties_baseUrl": {
+			"value": "https://keyvaulttest-GSK.vault.azure.net/"
+		},
+		"ls_AzureSqlDatabase_AVK_Test_properties_typeProperties_connectionString_secretName": {
+			"value": "sqlconn"
+		},
+		"ls_akv_AzureBlobStorage_properties_typeProperties_connectionString_secretName": {
+			"value": "AzureBlobStorageLocation"
+		},
+		"ls_akv_Test_properties_typeProperties_baseUrl": {
+			"value": "https://keyvaulttest-GSK.vault.azure.net/"
+		}
+	}
+}

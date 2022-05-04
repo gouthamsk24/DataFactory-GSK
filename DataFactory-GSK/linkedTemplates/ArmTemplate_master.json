@@ -1,0 +1,151 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "DataFactory-GSK"
+		},
+		"AzureSqlDatabase_Goutham_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase_Goutham'"
+		},
+		"BlobStorage_azurestorage_Auto_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'BlobStorage_azurestorage_Auto'"
+		},
+		"BlobStorage_azurestorage_Goutham_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'BlobStorage_azurestorage_Goutham'"
+		},
+		"AzureKeyVault_SQLDB_Test_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://keyvaulttest-GSK.vault.azure.net/"
+		},
+		"ls_AzureSqlDatabase_AVK_Test_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "sqlconn"
+		},
+		"ls_akv_AzureBlobStorage_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "AzureBlobStorageLocation"
+		},
+		"ls_akv_Test_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://keyvaulttest-GSK.vault.azure.net/"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "DataFactory-GSK_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureSqlDatabase_Goutham_connectionString": {
+						"value": "[parameters('AzureSqlDatabase_Goutham_connectionString')]"
+					},
+					"BlobStorage_azurestorage_Auto_connectionString": {
+						"value": "[parameters('BlobStorage_azurestorage_Auto_connectionString')]"
+					},
+					"BlobStorage_azurestorage_Goutham_connectionString": {
+						"value": "[parameters('BlobStorage_azurestorage_Goutham_connectionString')]"
+					},
+					"AzureKeyVault_SQLDB_Test_properties_typeProperties_baseUrl": {
+						"value": "[parameters('AzureKeyVault_SQLDB_Test_properties_typeProperties_baseUrl')]"
+					},
+					"ls_akv_Test_properties_typeProperties_baseUrl": {
+						"value": "[parameters('ls_akv_Test_properties_typeProperties_baseUrl')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "DataFactory-GSK_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"ls_AzureSqlDatabase_AVK_Test_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('ls_AzureSqlDatabase_AVK_Test_properties_typeProperties_connectionString_secretName')]"
+					},
+					"ls_akv_AzureBlobStorage_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('ls_akv_AzureBlobStorage_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'DataFactory-GSK_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "DataFactory-GSK_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'DataFactory-GSK_ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "DataFactory-GSK_ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'DataFactory-GSK_ArmTemplate_2')]"
+			]
+		}
+	]
+}
