@@ -1,0 +1,41 @@
+{
+	"name": "ds_AzureSqlTable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_AzureSqlDatabase_AVK_Test",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "EMPID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "EMPNAME",
+				"type": "varchar"
+			},
+			{
+				"name": "EMPSAL",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "EMPLOCATION",
+				"type": "varchar"
+			},
+			{
+				"name": "DEPTID",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "EMPLOCATION"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

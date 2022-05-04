@@ -1,0 +1,96 @@
+{
+	"name": "pl_dl_EMPLOYEES_DEPTNAME",
+	"properties": {
+		"activities": [
+			{
+				"name": "dl_EMPLOYEES_DEPTNAME",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "dl_EMPLOYEES_DEPTNAME",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "dl_EMP_DEPT_CONDITIONALSPLIT_LKP",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "dl_EMPLOYEES_DEPTNAME",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_Employees_Dept_Lookup",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "dfEmpsUnion",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "dl_EMP_DEPT_CONDITIONALSPLIT_LKP",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_Emp_Union",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2022-04-26T23:00:13Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,33 @@
+{
+	"name": "AzureSqlTable_Person",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase_Goutham",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Personid",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "PersonName",
+				"type": "varchar"
+			},
+			{
+				"name": "LastModifyTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "person"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

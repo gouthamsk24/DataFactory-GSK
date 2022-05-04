@@ -1,0 +1,92 @@
+{
+	"name": "parent_Get_List_Of_Files_ForLoad",
+	"properties": {
+		"activities": [
+			{
+				"name": "Metadata_Get_List_of_Files",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "AzureStorageAccount_Blob_InternetSales_Folder",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "Execute_child_ForEach",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "filter_factinternetsales_meta",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "child_ForEach_Load",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"FileList": {
+							"value": "@activity('filter_factinternetsales_meta').output.value",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "filter_factinternetsales_meta",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Metadata_Get_List_of_Files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Metadata_Get_List_of_Files').output.childItems",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@startswith(item().name,'FactInternetSales_')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "Copy Wizards"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-04-26T23:50:03Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,37 @@
+{
+	"name": "blob_ProductModel",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "BlobStorage_azurestorage_Goutham",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Copy Wizard DataSets"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "ProductModel_Lookup.txt",
+				"folderPath": "Products",
+				"container": "container-goutham"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "ProductModelID",
+				"type": "String"
+			},
+			{
+				"name": "Name",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

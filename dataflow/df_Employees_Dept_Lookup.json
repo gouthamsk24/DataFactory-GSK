@@ -1,0 +1,160 @@
+{
+	"name": "df_Employees_Dept_Lookup",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable_EMPLOYEES",
+						"type": "DatasetReference"
+					},
+					"name": "EMPLOYEES"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable_DEPT",
+						"type": "DatasetReference"
+					},
+					"name": "DEPT"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable_Emp_Dept_10",
+						"type": "DatasetReference"
+					},
+					"name": "sinkDEPT10"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable_Emp_Dept_30",
+						"type": "DatasetReference"
+					},
+					"name": "sinkDept30"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable_Emp_Depts_Others",
+						"type": "DatasetReference"
+					},
+					"name": "sinkDeptsOthers"
+				}
+			],
+			"transformations": [
+				{
+					"name": "lookupDept"
+				},
+				{
+					"name": "splitDept1030"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EMPID as integer,",
+				"          ENAME as string,",
+				"          SAL as integer,",
+				"          DEPTID as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> EMPLOYEES",
+				"source(output(",
+				"          DEPTID as integer,",
+				"          DEPTNAME as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> DEPT",
+				"EMPLOYEES, DEPT lookup(EMPLOYEES@DEPTID == DEPT@DEPTID,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookupDept",
+				"lookupDept split(DEPT@DEPTID==10,",
+				"     DEPT@DEPTID==30,",
+				"     disjoint: false) ~> splitDept1030@(DeptId10, DeptId30, AllOtherDepts)",
+				"splitDept1030@DeptId10 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          EMPID as integer,",
+				"          ENAME as string,",
+				"          SAL as integer,",
+				"          DEPTID as integer,",
+				"          DEPTNAME as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          EMPID,",
+				"          ENAME,",
+				"          SAL,",
+				"          DEPTID = splitDept1030@DeptId10@DEPTID,",
+				"          DEPTNAME",
+				"     )) ~> sinkDEPT10",
+				"splitDept1030@DeptId30 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          EMPID as integer,",
+				"          ENAME as string,",
+				"          SAL as integer,",
+				"          DEPTID as integer,",
+				"          DEPTNAME as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 3,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          EMPID,",
+				"          ENAME,",
+				"          SAL,",
+				"          DEPTID = splitDept1030@DeptId30@DEPTID,",
+				"          DEPTNAME",
+				"     )) ~> sinkDept30",
+				"splitDept1030@AllOtherDepts sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          EMPID as integer,",
+				"          ENAME as string,",
+				"          SAL as integer,",
+				"          DEPTID as integer,",
+				"          DEPTNAME as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 2,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          EMPID,",
+				"          ENAME,",
+				"          SAL,",
+				"          DEPTID = splitDept1030@AllOtherDepts@DEPTID,",
+				"          DEPTNAME",
+				"     )) ~> sinkDeptsOthers"
+			]
+		}
+	}
+}

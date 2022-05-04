@@ -1,0 +1,53 @@
+{
+	"name": "blob_ProductInventory",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "BlobStorage_azurestorage_Auto",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Copy Wizard DataSets"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "ProductInventory.txt",
+				"folderPath": "Products",
+				"container": "container-goutham"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "ProductID",
+				"type": "String"
+			},
+			{
+				"name": "LocationID",
+				"type": "String"
+			},
+			{
+				"name": "Shelf",
+				"type": "String"
+			},
+			{
+				"name": "Bin",
+				"type": "String"
+			},
+			{
+				"name": "Quantity",
+				"type": "String"
+			},
+			{
+				"name": "ModifiedDate",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

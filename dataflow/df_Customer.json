@@ -1,0 +1,101 @@
+{
+	"name": "df_Customer",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_customer",
+						"type": "DatasetReference"
+					},
+					"name": "cusotmertest"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable_Customer",
+						"type": "DatasetReference"
+					},
+					"name": "customertgt"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable_Customer_pktest",
+						"type": "DatasetReference"
+					},
+					"name": "customerpktest"
+				}
+			],
+			"transformations": [
+				{
+					"name": "alterRow1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          CustomerID as string,",
+				"          FirstName as string,",
+				"          Lastname as string,",
+				"          AccountBalance as string,",
+				"          LastModifytime as string",
+				"     ),",
+				"     allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> cusotmertest",
+				"cusotmertest alterRow(upsertIf(true())) ~> alterRow1",
+				"cusotmertest sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          CustId as integer,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          bal as integer,",
+				"          lastModifiedTime as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          CustId = CustomerID,",
+				"          FirstName,",
+				"          LastName = Lastname,",
+				"          bal = AccountBalance,",
+				"          lastModifiedTime = LastModifytime",
+				"     )) ~> customertgt",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          CustId as integer,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          bal as integer,",
+				"          lastModifiedTime as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:false,",
+				"     upsertable:true,",
+				"     keys:['CustId'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          CustId = CustomerID,",
+				"          FirstName,",
+				"          LastName = Lastname,",
+				"          bal = AccountBalance,",
+				"          lastModifiedTime = LastModifytime",
+				"     )) ~> customerpktest"
+			]
+		}
+	}
+}

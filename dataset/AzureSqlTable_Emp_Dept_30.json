@@ -1,0 +1,41 @@
+{
+	"name": "AzureSqlTable_Emp_Dept_30",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase_Goutham",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "EMPID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ENAME",
+				"type": "varchar"
+			},
+			{
+				"name": "SAL",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DEPTID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DEPTNAME",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "EMP_DEPT_30"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

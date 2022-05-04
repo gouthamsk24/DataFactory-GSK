@@ -1,0 +1,40 @@
+{
+	"name": "AzureSqlTable_Customer_pktest",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase_Goutham",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "CustId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "FirstName",
+				"type": "varchar"
+			},
+			{
+				"name": "LastName",
+				"type": "varchar"
+			},
+			{
+				"name": "bal",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "lastModifiedTime",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "customer_pktest"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

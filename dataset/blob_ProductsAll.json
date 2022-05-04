@@ -1,0 +1,33 @@
+{
+	"name": "blob_ProductsAll",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "BlobStorage_azurestorage_Goutham",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Copy Wizard DataSets"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Products_All.txt",
+				"folderPath": "Products",
+				"container": "container-goutham"
+			},
+			"columnDelimiter": "|",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "ProductID|Name|ProductNumber|MakeFlag|FinishedGoodsFlag|Color|SafetyStockLevel|ReorderPoint|StandardCost|ListPrice|Size|SizeUnitMeasureCode|WeightUnitMeasureCode|Weight|DaysToManufacture|ProductLine|Class|Style|ProductSubcategoryID|ProductModelID|SellStartDate|SellEndDate|DiscontinuedDate",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

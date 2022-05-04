@@ -1,0 +1,9 @@
+{
+	"name": "DataFactory-GSK",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "cb955aa5-8bbc-496f-b465-b987ef5ba601",
+		"tenantId": "e1e313f9-bdfb-4965-9d0b-525dd9446774"
+	}
+}

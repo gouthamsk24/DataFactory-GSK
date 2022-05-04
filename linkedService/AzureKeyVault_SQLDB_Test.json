@@ -1,0 +1,11 @@
+{
+	"name": "AzureKeyVault_SQLDB_Test",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://keyvaulttest-GSK.vault.azure.net/"
+		}
+	}
+}

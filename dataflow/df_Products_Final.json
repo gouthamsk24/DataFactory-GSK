@@ -1,0 +1,157 @@
+{
+	"name": "df_Products_Final",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "blob_ProductsAll",
+						"type": "DatasetReference"
+					},
+					"name": "ProductsAll"
+				},
+				{
+					"dataset": {
+						"referenceName": "blob_ProductModel",
+						"type": "DatasetReference"
+					},
+					"name": "ProductModel"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "blob_ProductsFinal",
+						"type": "DatasetReference"
+					},
+					"name": "ProductFinalSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "ModelNameLookUp"
+				},
+				{
+					"name": "PaddedWeightColumn"
+				},
+				{
+					"name": "CleanupColumns"
+				},
+				{
+					"name": "RemovingEmptyListPrice"
+				},
+				{
+					"name": "ListPriceDesc"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ProductID as short,",
+				"          Name as string,",
+				"          ProductNumber as string,",
+				"          MakeFlag as boolean,",
+				"          FinishedGoodsFlag as boolean,",
+				"          Color as string,",
+				"          SafetyStockLevel as short,",
+				"          ReorderPoint as short,",
+				"          StandardCost as double,",
+				"          ListPrice as double,",
+				"          Size as string,",
+				"          SizeUnitMeasureCode as string,",
+				"          WeightUnitMeasureCode as string,",
+				"          Weight as integer,",
+				"          DaysToManufacture as short,",
+				"          ProductLine as string,",
+				"          Class as string,",
+				"          Style as string,",
+				"          ProductSubcategoryID as short,",
+				"          ProductModelID as short,",
+				"          SellStartDate as timestamp,",
+				"          SellEndDate as timestamp,",
+				"          DiscontinuedDate as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> ProductsAll",
+				"source(output(",
+				"          ProductModelID as short,",
+				"          Name as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> ProductModel",
+				"ProductsAll, ProductModel lookup(ProductsAll@ProductModelID == ProductModel@ProductModelID,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> ModelNameLookUp",
+				"ModelNameLookUp derive(PaddedWeight = Weight*1.10) ~> PaddedWeightColumn",
+				"PaddedWeightColumn select(mapColumn(",
+				"          ProductID,",
+				"          Name = ProductsAll@Name,",
+				"          ProductNumber,",
+				"          MakeFlag,",
+				"          FinishedGoodsFlag,",
+				"          Color,",
+				"          SafetyStockLevel,",
+				"          ReorderPoint,",
+				"          StandardCost,",
+				"          ListPrice,",
+				"          Size,",
+				"          SizeUnitMeasureCode,",
+				"          WeightUnitMeasureCode,",
+				"          Weight,",
+				"          DaysToManufacture,",
+				"          ProductLine,",
+				"          Class,",
+				"          Style,",
+				"          ProductSubcategoryID,",
+				"          ProductModelID = ProductsAll@ProductModelID,",
+				"          SellStartDate,",
+				"          SellEndDate,",
+				"          DiscontinuedDate,",
+				"          ModelName = ProductModel@Name,",
+				"          PaddedWeight",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> CleanupColumns",
+				"CleanupColumns filter(notEquals(ListPrice,0)) ~> RemovingEmptyListPrice",
+				"RemovingEmptyListPrice sort(desc(ListPrice, true)) ~> ListPriceDesc",
+				"ListPriceDesc sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ProductKey as string,",
+				"          OrderDateKey as string,",
+				"          DueDateKey as string,",
+				"          ShipDateKey as string,",
+				"          CustomerKey as string,",
+				"          PromotionKey as string,",
+				"          CurrencyKey as string,",
+				"          SalesTerritoryKey as string,",
+				"          SalesOrderNumber as string,",
+				"          SalesOrderLineNumber as string,",
+				"          RevisionNumber as string,",
+				"          OrderQuantity as string,",
+				"          UnitPrice as string,",
+				"          ExtendedAmount as string,",
+				"          UnitPriceDiscountPct as string,",
+				"          DiscountAmount as string,",
+				"          ProductStandardCost as string,",
+				"          TotalProductCost as string,",
+				"          SalesAmount as string,",
+				"          TaxAmt as string,",
+				"          Freight as string,",
+				"          CarrierTrackingNumber as string,",
+				"          CustomerPONumber as string,",
+				"          OrderDate as string,",
+				"          DueDate as string,",
+				"          ShipDate as string",
+				"     ),",
+				"     partitionFileNames:['Products_Final_FromDF'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> ProductFinalSink"
+			]
+		}
+	}
+}
